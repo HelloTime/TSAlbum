@@ -1,6 +1,7 @@
 # TSPhotoBrow
 
 Photos.framework封装的图片选择浏览器，适配iOS8以上
+觉得好用的话，右上角给颗星星🙏🙏🙏
 
 ![QQ20170622-114725-HD](https://github.com/HelloTime/TSAlbum/blob/master/Screen/QQ20170622-114725-HD.gif)
 

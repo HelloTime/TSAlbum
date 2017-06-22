@@ -16,6 +16,8 @@
 
 @interface ViewController ()
 
+@property (nonatomic, weak) TSSelectPhotoView *selectPhotoView;
+
 @end
 
 @implementation ViewController
@@ -24,19 +26,23 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view, typically from a nib.
     
+    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemRefresh target:self action:@selector(refresh)];
+    
+    
     TSSelectPhotoView *view = [[TSSelectPhotoView alloc] init];
     view.delegateViewController = self;
     view.maxImageCount = 9;
+    self.selectPhotoView = view;
     view.translatesAutoresizingMaskIntoConstraints = NO;
     [self.view addSubview:view];
-    view.backgroundColor = [UIColor grayColor];
+    view.backgroundColor = [[UIColor grayColor] colorWithAlphaComponent:0.8];
     
     [self.view addConstraint:[NSLayoutConstraint constraintWithItem:view
                                                           attribute:NSLayoutAttributeTop
                                                           relatedBy:NSLayoutRelationEqual
                                                              toItem:self.view
                                                           attribute:NSLayoutAttributeTop
-                                                         multiplier:1.0 constant:80]];
+                                                         multiplier:1.0 constant:0]];
     
     [self.view addConstraint:[NSLayoutConstraint constraintWithItem:view
                                                           attribute:NSLayoutAttributeLeft
@@ -54,6 +60,10 @@
     
 }
 
+- (void)refresh {
+    self.selectPhotoView.images = nil;
+    [self.selectPhotoView updateCollectionViewHeight];
+}
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];

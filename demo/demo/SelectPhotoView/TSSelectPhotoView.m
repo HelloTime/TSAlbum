@@ -38,25 +38,32 @@
 - (void)localPhoto
 {
     __weak typeof(self)weakSelf = self;
+    // --检查相册权限
     [TSCameraHelper checkPhotoLibraryAuthorizationStatus:^(BOOL granted) {
         if (granted) {
+            // --设置图片回调
             [TSPhotoManager sharedInstance].imageCallBack = ^(NSArray<UIImage *> *images) {
                 [weakSelf.images addObjectsFromArray:images];
                 [weakSelf updateCollectionViewHeight];
-                [weakSelf.collectionView reloadData];
+                
             };
+            // --设置Data回调
             [TSPhotoManager sharedInstance].imageDataCallBack = ^(NSArray<NSData *> *imageDatas) {
                 
             };
+            // --设置需要的图片尺寸
             [TSPhotoManager sharedInstance].photoSize = CGSizeMake(PhotoItemWH, PhotoItemWH);
-            [TSPhotoManager sharedInstance].maxPhotoCount = self.maxImageCount - self.images.count;
-            [_delegateViewController presentViewController:[TSPhotoNavigationController new] animated:YES completion:nil];
+            // --设置图片数量
+            [TSPhotoManager sharedInstance].maxPhotoCount = weakSelf.maxImageCount - weakSelf.images.count;
+            // --跳转相册
+            [weakSelf.delegateViewController presentViewController:[TSPhotoNavigationController new] animated:YES completion:nil];
         }
     }];
 }
 
 - (void)takePhoto
 {
+    __weak typeof(self)weakSelf = self;
     [TSCameraHelper checkCameraAuthorizationStatus:^(BOOL granted) {
         //资源类型为照相机
         UIImagePickerControllerSourceType sourceType = UIImagePickerControllerSourceTypeCamera;
@@ -65,11 +72,11 @@
         if ([UIImagePickerController isSourceTypeAvailable:sourceType]) {
             
             UIImagePickerController *picker = [[UIImagePickerController alloc] init];
-            picker.delegate = self;
+            picker.delegate = weakSelf;
             //设置选择后的图片可被编辑
             picker.allowsEditing = NO;
             picker.sourceType = sourceType;
-            [self.delegateViewController presentViewController:picker animated:YES completion:nil];
+            [weakSelf.delegateViewController presentViewController:picker animated:YES completion:nil];
             
         }
         else
@@ -90,7 +97,6 @@
     }
     [self.images addObject:pickerImage];
     [self updateCollectionViewHeight];
-    [self.collectionView reloadData];
 }
 
 - (void)imagePickerControllerDidCancel:(UIImagePickerController *)picker{
@@ -161,6 +167,32 @@
 }
 
 
+
+// 更新UI
+- (void)updateCollectionViewHeight {
+    self.heightConstraint.constant = ((self.images.count)/4+1)*(PhotoItemWH+PhotoMargin)+PhotoMargin;
+    [UIView animateWithDuration:.3 animations:^{
+        [self layoutIfNeeded];
+    }];
+    [self.collectionView reloadData];
+}
+
+- (void)setMaxImageCount:(NSInteger)maxImageCount {
+    _maxImageCount = maxImageCount;
+}
+
+- (NSMutableArray *)images {
+    if (!_images) {
+        _images = [NSMutableArray arrayWithCapacity:0];
+    }
+    return _images;
+}
+
+- (UIViewController *)delegateViewController {
+    NSAssert(_delegateViewController != nil, @"跳转的controller不能为nil");
+    return _delegateViewController;
+}
+
 - (void)configCollectionView {
     UICollectionViewFlowLayout *layout = [[UICollectionViewFlowLayout alloc] init];
     layout.itemSize = CGSizeMake(PhotoItemWH, PhotoItemWH);
@@ -209,29 +241,6 @@
                                                                                 toItem:nil
                                                                              attribute:NSLayoutAttributeNotAnAttribute
                                                                             multiplier:1.0 constant:((self.images.count)/4+1)*(PhotoItemWH+PhotoMargin)+PhotoMargin]];
-}
-
-- (UIViewController *)delegateViewController {
-    NSAssert(_delegateViewController != nil, @"跳转的controller不能为nil");
-    return _delegateViewController;
-}
-
-- (void)updateCollectionViewHeight {
-    self.heightConstraint.constant = ((self.images.count)/4+1)*(PhotoItemWH+PhotoMargin)+PhotoMargin;
-    [UIView animateWithDuration:.5 animations:^{
-        [self layoutIfNeeded];
-    }];
-}
-
-- (NSMutableArray *)images {
-    if (!_images) {
-        _images = [NSMutableArray arrayWithCapacity:0];
-    }
-    return _images;
-}
-
-- (void)setMaxImageCount:(NSInteger)maxImageCount {
-    _maxImageCount = maxImageCount;
 }
 
 @end

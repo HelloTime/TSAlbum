@@ -14,7 +14,6 @@
     self = [super initWithFrame:frame];
     if (self) {
         
-        self.backgroundColor = [UIColor whiteColor];
         self.clipsToBounds = YES;
         
         _imageView = [[UIImageView alloc] init];

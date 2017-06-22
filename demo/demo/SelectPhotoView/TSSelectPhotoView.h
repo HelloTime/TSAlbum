@@ -20,4 +20,6 @@
 
 @property (nonatomic, weak) UIViewController *delegateViewController;
 
+- (void)updateCollectionViewHeight;
+
 @end

@@ -18,4 +18,13 @@
  * 检查系统"相机"授权状态, 如果权限被关闭, 提示用户去隐私设置中打开.
  */
 + (void)checkCameraAuthorizationStatus:(void(^)(BOOL granted))handler;
+
+
+
+
+
+
+
+
+
 @end

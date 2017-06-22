@@ -40,6 +40,7 @@ static TSPhotoManager  * _singleton = nil;
                                                       
                                                       if (images.count == array.count) {
                                                           weakSelf.imageCallBack([NSArray arrayWithArray:images]);
+                                                          weakSelf.imageCallBack = nil;
                                                       }
                                                       
                                                   }];
@@ -59,6 +60,7 @@ static TSPhotoManager  * _singleton = nil;
                                                           
                                                           if (imageDatas.count == array.count) {
                                                               weakSelf.imageDataCallBack([NSArray arrayWithArray:imageDatas]);
+                                                              weakSelf.imageDataCallBack = nil;
                                                           }
                                                           
                                                       }];

@@ -8,7 +8,7 @@
 
 #import "TSSelectPhotoView.h"
 #import "TSPhotoCell.h"
-#import "TSCameraHelper.h"
+#import "TSAuthorizationHelper.h"
 #import "TSAlbum.h"
 
 #define PhotoMargin 10
@@ -39,7 +39,7 @@
 {
     __weak typeof(self)weakSelf = self;
     // --检查相册权限
-    [TSCameraHelper checkPhotoLibraryAuthorizationStatus:^(BOOL granted) {
+    [TSAuthorizationHelper ts_checkPhotoLibraryAuthorizationStatus:^(BOOL granted) {
         if (granted) {
             // --设置图片回调
             [TSPhotoManager sharedInstance].imageCallBack = ^(NSArray<UIImage *> *images) {
@@ -56,7 +56,10 @@
             // --设置图片数量
             [TSPhotoManager sharedInstance].maxPhotoCount = weakSelf.maxImageCount - weakSelf.images.count;
             // --跳转相册
-            [weakSelf.delegateViewController presentViewController:[TSPhotoNavigationController new] animated:YES completion:nil];
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [weakSelf.delegateViewController presentViewController:[TSPhotoNavigationController new] animated:YES completion:nil];
+            });
+            
         }
     }];
 }
@@ -64,7 +67,7 @@
 - (void)takePhoto
 {
     __weak typeof(self)weakSelf = self;
-    [TSCameraHelper checkCameraAuthorizationStatus:^(BOOL granted) {
+    [TSAuthorizationHelper ts_checkCameraAuthorizationStatus:^(BOOL granted) {
         //资源类型为照相机
         UIImagePickerControllerSourceType sourceType = UIImagePickerControllerSourceTypeCamera;
         
@@ -76,7 +79,9 @@
             //设置选择后的图片可被编辑
             picker.allowsEditing = NO;
             picker.sourceType = sourceType;
-            [weakSelf.delegateViewController presentViewController:picker animated:YES completion:nil];
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [weakSelf.delegateViewController presentViewController:picker animated:YES completion:nil];
+            });
             
         }
         else

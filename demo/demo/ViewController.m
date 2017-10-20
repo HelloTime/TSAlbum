@@ -11,7 +11,7 @@
 #import "TSSelectPhotoView.h"
 #import "TSAlbumHelper.h"
 
-#import "TSCameraHelper.h"
+#import "TSAuthorizationHelper.h"
 
 
 @interface ViewController ()
@@ -57,6 +57,10 @@
                                                              toItem:self.view
                                                           attribute:NSLayoutAttributeRight
                                                          multiplier:1.0 constant:0]];
+    
+    [TSAuthorizationHelper ts_checkLocationAuthorizationStatus:^(BOOL granted) {
+        
+    }];
     
 }
 

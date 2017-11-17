@@ -12,10 +12,10 @@ Pod::Spec.new do |s|
 
   s.name         = "TSAlbum"
   s.version      = "0.0.1"
-  s.summary      = "使用Photos.framework封装的图片选择浏览器."
+  s.summary      = "TSAlbum"
 
   s.description  = <<-DESC
-                    图片选择浏览器.
+                            图片选择浏览器
                    DESC
 
   s.homepage     = "https://github.com/HelloTime/TSAlbum"
